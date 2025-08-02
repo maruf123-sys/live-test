@@ -1,1 +1,96 @@
 # live-test
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const EmployeeApp());
+}
+
+class EmployeeApp extends StatelessWidget {
+  const EmployeeApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Add Employee',
+      home: const AddEmployeeScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class AddEmployeeScreen extends StatefulWidget {
+  const AddEmployeeScreen({super.key});
+
+  @override
+  State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
+}
+
+class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _salaryController = TextEditingController();
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      final name = _nameController.text;
+      final age = _ageController.text;
+      final salary = _salaryController.text;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Employee Added: $name, Age: $age, Salary: $salary'),
+        ),
+      );
+
+      _nameController.clear();
+      _ageController.clear();
+      _salaryController.clear();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Add Employee')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter name' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _ageController,
+                decoration: const InputDecoration(labelText: 'Age'),
+                keyboardType: TextInputType.number,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter age' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _salaryController,
+                decoration: const InputDecoration(labelText: 'Salary'),
+                keyboardType: TextInputType.number,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter salary' : null,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text('Add Employee'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
